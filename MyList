@@ -1,0 +1,134 @@
+#include <iostream>
+
+struct Node
+{
+    int data;
+    Node* next;
+};
+
+class MyList
+{
+private:
+    Node* head;
+public:
+    MyList() { head = NULL; }
+
+
+    int front() { return head->data; }
+
+
+    int back()
+    {
+        Node* iter = head;
+        while(iter->next)
+            iter=iter->next;
+        return iter->data;
+    }
+
+
+    Node* begin() { return head; }
+
+
+    Node* end()
+    {
+        Node* iter = head;
+        while(iter->next)
+            iter=iter->next;
+        return iter;
+    }
+
+
+    void push_back(int new_ver)
+    {
+        Node* new_node = new Node;
+        new_node->data=new_ver;
+        new_node->next=NULL;
+
+        if(head==NULL)
+            head = new_node;
+        else
+        {
+            Node* end = head;
+
+            while(end->next)
+                end=end->next;
+            end->next=new_node;
+        }
+    }
+
+
+    void merge_list(Node* head_sec)
+    {
+        if(head==NULL)
+            head=head_sec;
+        else
+        {
+            Node* end = head;
+            while(end->next)
+                end=end->next;
+            end->next=head_sec;
+        }
+    }
+
+
+    void print_list()
+    {
+        Node* iter = head;
+        while(iter)
+        {
+            std::cout<<(iter->data)<<"\n";
+            iter=iter->next;
+        }
+    }
+
+
+    void pop_back()
+    {
+        try
+        {
+            if(head==NULL)
+                throw -1;
+            else
+            {
+                Node* end = head;
+                while(end->next->next)
+                    end=end->next;
+                end->next=NULL;
+            }
+        }
+        catch(int)
+        {
+            std::cerr<<"pop_back";
+        }
+    }
+
+
+    MyList& operator=(const MyList&);
+
+
+    MyList& operator=(MyList&& List)
+    {
+        delete [] List.head;
+        return *this;
+    }
+
+
+    MyList(const MyList& List) { head = List.head; }
+};
+MyList& MyList::operator=(const MyList &List)
+{
+    Node* head_new =List.head;
+    this->head=head_new;
+
+    while (head_new->next)
+    {
+        Node* n_copy = new Node;
+
+        n_copy->data=head_new->next->data;
+        n_copy->next=head_new->next->next;
+        head_new->next=n_copy;
+
+        head_new=head_new->next;
+    }
+    return *this;
+}
